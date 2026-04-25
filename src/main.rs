@@ -1,51 +1,66 @@
 #![no_std]
 #![no_main]
+#![feature(abi_x86_interrupt)]
 
+extern crate alloc;
+
+mod memory;
+mod paging;
+mod interrupts;
+mod task;
+mod allocator;
+mod serial;
+use serial::{init_serial, print_str, print_hex};
 use bootloader_api::{entry_point, BootInfo};
 use core::panic::PanicInfo;
 
-// Регистрируем точку входа
+use allocator::ALLOCATOR;
+
 entry_point!(kernel_main);
 
-fn kernel_main(_boot_info: &'static mut BootInfo) -> ! {
+fn kernel_main(boot_info: &'static mut BootInfo) -> ! {
     init_serial();
-    print_str(">>> MyOS Kernel booted successfully!\r\n");
-    print_str(">>> AI Policy Hook will be added next.\r\n");
-    loop {}
-}
 
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    print_str("KERNEL PANIC!\r\n");
-    loop {}
-}
+    print_str(">>> NeuroOS booting...\n");
 
-// === Serial Output (COM1 @ 0x3F8) ===
-unsafe fn outb(port: u16, val: u8) {
-    core::arch::asm!("outb %al, %dx", in("al") val, in("dx") port);
-}
-
-fn init_serial() {
     unsafe {
-        outb(0x3F8 + 1, 0x00);
-        outb(0x3F8 + 3, 0x80);
-        outb(0x3F8 + 0, 0x03);
-        outb(0x3F8 + 1, 0x00);
-        outb(0x3F8 + 3, 0x03);
-        outb(0x3F8 + 2, 0xC7);
-        outb(0x3F8 + 4, 0x0B);
+        ALLOCATOR.init(
+            memory::BumpAllocator::new(&boot_info.memory_regions)
+        );
     }
-}
 
-fn print_char(byte: u8) {
+    print_str("Allocator ready\n");
+
+    let phys_offset = boot_info
+        .physical_memory_offset
+        .into_option()
+        .expect("No phys offset");
+
+    let mut mapper = unsafe { paging::init(phys_offset) };
+
+    let mut frame_allocator = unsafe {
+        paging::BootInfoFrameAllocator::init(&boot_info.memory_regions)
+    };
+
+    print_str("Paging ready\n");
+
+    interrupts::init_idt();
+
     unsafe {
-        while (core::arch::asm!("inb %dx", out("al") -> u8, in("dx") 0x3F8 + 5) & 0x20) == 0 {}
-        outb(0x3F8, byte);
+        interrupts::PICS.lock().initialize();
+        x86_64::instructions::interrupts::enable();
     }
-}
 
-fn print_str(s: &str) {
-    for &byte in s.as_bytes() {
-        print_char(byte);
+    print_str("Interrupts enabled\n");
+
+    unsafe {
+        task::SCHEDULER.with(|s| {
+            s.add_task(task::Task { id: 1, stack_pointer: 0 });
+            s.add_task(task::Task { id: 2, stack_pointer: 0 });
+        });
+    }
+
+    loop {
+        x86_64::instructions::hlt();
     }
 }

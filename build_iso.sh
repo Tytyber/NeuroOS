@@ -1,36 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+KERNEL_NAME="neuros"
+TARGET="x86_64-unknown-none"
+BUILD_DIR="target/${TARGET}/debug"
+PROJECT_ROOT="$(pwd)"
+
 echo "🔨 Building kernel..."
-cargo build --target x86_64-unknown-none
+cargo build --target "$TARGET"
 
-echo "🔍 Searching for UEFI bootloader..."
-# Ищем .efi файл в target
-EFI_FILE=$(find target/x86_64-unknown-none/debug -name "*.efi" -type f | head -n1)
-
-if [ -z "$EFI_FILE" ]; then
-    echo "❌ Error: .efi file not found. Run 'cargo clean' and rebuild."
+BIN_FILE="${BUILD_DIR}/${KERNEL_NAME}"
+if [ ! -f "$BIN_FILE" ]; then
+    echo "❌ Error: kernel binary not found at $BIN_FILE"
     exit 1
 fi
-echo "✅ Found: $EFI_FILE"
+echo "✅ Found: $BIN_FILE"
 
-echo "📦 Preparing ISO structure..."
-rm -rf iso_build
-mkdir -p iso_build/EFI/BOOT
-cp "$EFI_FILE" iso_build/EFI/BOOT/BOOTX64.EFI
+echo "📦 Creating bootable ISO (BIOS/Legacy)..."
+rm -rf "${PROJECT_ROOT}/iso_build"
+mkdir -p "${PROJECT_ROOT}/iso_build/boot/grub"
 
-echo "💿 Creating UEFI ISO..."
+# Копируем ядро
+cp "$BIN_FILE" "${PROJECT_ROOT}/iso_build/boot/kernel.bin"
+
+# Создаём ISO — обратите внимание на "." в конце (содержимое iso_build)
 xorriso -as mkisofs \
   -iso-level 3 \
-  -full-iso9660-filenames \
-  -volid "MYOS" \
-  -e EFI/BOOT/BOOTX64.EFI \
+  -rock \
+  -volid "NEUROS" \
+  -b boot/kernel.bin \
   -no-emul-boot \
   -boot-load-size 4 \
   -boot-info-table \
-  -o myos.iso \
-  iso_build/
+  -o "${PROJECT_ROOT}/neuros_bios.iso" \
+  "${PROJECT_ROOT}/iso_build"
 
-rm -rf iso_build
-echo "🎉 ISO ready: ./myos.iso"
-echo "🖥️  Test: qemu-system-x86_64 -cdrom myos.iso -serial stdio -nographic"
+rm -rf "${PROJECT_ROOT}/iso_build"
+echo "🎉 BIOS ISO ready: ${PROJECT_ROOT}/neuros_bios.iso"

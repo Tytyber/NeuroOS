@@ -1,0 +1,12 @@
+D:\A.Tgex\Project\NeuroOS\target\x86_64-unknown-none\debug\deps\spin-5e8ab1ac7352b1da.d: C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\lib.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\barrier.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\lazy.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\mutex.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\mutex\spin.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\once.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\relax.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\rwlock.rs
+
+D:\A.Tgex\Project\NeuroOS\target\x86_64-unknown-none\debug\deps\libspin-5e8ab1ac7352b1da.rmeta: C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\lib.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\barrier.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\lazy.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\mutex.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\mutex\spin.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\once.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\relax.rs C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\rwlock.rs
+
+C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\lib.rs:
+C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\barrier.rs:
+C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\lazy.rs:
+C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\mutex.rs:
+C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\mutex\spin.rs:
+C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\once.rs:
+C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\relax.rs:
+C:\Users\at282\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\spin-0.10.0\src\rwlock.rs:
